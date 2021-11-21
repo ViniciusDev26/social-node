@@ -1,8 +1,8 @@
+import { sign } from 'jsonwebtoken';
+
 import { IAuthUserDTO } from "../dtos/auth/IAuthUserDTO";
 import { checkPassword } from "../helpers/checkPassword";
 import { prismaClient } from "../prisma/client";
-
-import { sign } from 'jsonwebtoken';
 
 class AuthUserService {
   static async execute(credentials: IAuthUserDTO) {
