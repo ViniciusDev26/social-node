@@ -1,28 +1,34 @@
 import { sign } from 'jsonwebtoken';
 
 import { IAuthUserDTO } from "../dtos/auth/IAuthUserDTO";
+import { WrongCredentialsError } from '../errors/WrongCredentialsError';
 import { checkPassword } from "../helpers/checkPassword";
 import { prismaClient } from "../prisma/client";
 
 class AuthUserService {
-  static async execute(credentials: IAuthUserDTO) {
+
+  private static async verifyCredentials(email: string, password: string) {
     const user = await prismaClient.user.findUnique({
-      where: { email: credentials.email },
+      where: { email: email },
     })
 
     if (!user) {
-      return {
-        message: "Error: Usuário não encontrado",
-      }
+      throw new WrongCredentialsError();
     }
 
-    const passwordIsValid = await checkPassword(credentials.password, user.password);
+    const passwordIsValid = await checkPassword(password, user.password);
 
     if (!passwordIsValid) {
-      return {
-        message: "Error: Senha inválida",
-      }
+      throw new WrongCredentialsError();
     }
+
+    return user;
+  }
+
+  static async execute(credentials: IAuthUserDTO) {
+    const {email, password} = credentials;
+
+    const user = await this.verifyCredentials(email, password);
 
     const payload = { 
       email: user.email, 
@@ -36,6 +42,7 @@ class AuthUserService {
       token: `Bearer ${token}`,
     };
   }
+  
 }
 
 export { AuthUserService };
