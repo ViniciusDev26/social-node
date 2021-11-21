@@ -33,7 +33,7 @@ class AuthUserService {
     const token = sign(payload, secret, { expiresIn: '1d'})
     
     return {
-      token
+      token: `Bearer ${token}`,
     };
   }
 }
