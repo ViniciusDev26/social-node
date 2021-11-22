@@ -1,14 +1,14 @@
-import { createTransport } from "nodemailer";
+import { createTransport, TransportOptions } from "nodemailer";
 
 function createTransporterMailTrap() {
   const transporter = createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
+    host: process.env.MAIL_HOST,
+    port: process.env.MAIL_PORT,
     auth: {
-      user: "541df3c0ab4255",
-      pass: "ed80d091dd75e4"
+      user: process.env.MAIL_USER,
+      pass: process.env.MAIL_PASSWORD,
     }
-  });
+  } as TransportOptions);
 
   return transporter;
 }

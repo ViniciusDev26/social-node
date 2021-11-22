@@ -1,6 +1,6 @@
 import { prismaClient } from "../prisma/client";
 import { v4 as uuidV4 } from "uuid";
-import { sendEmailToConfirmAccount } from "../emails/sendEmailToConfirmAccount";
+import { EmailSenderService } from "./EmailSenderService";
 
 class ResendEmailVerificationService {
   static async execute(email: string) {
@@ -15,7 +15,8 @@ class ResendEmailVerificationService {
       }
     });
 
-    sendEmailToConfirmAccount(email, newCode);
+    const emailSenderService = new EmailSenderService();
+    emailSenderService.emailConfirmationAccount(email, newCode);
   }
 }
 

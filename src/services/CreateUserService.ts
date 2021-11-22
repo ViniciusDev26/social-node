@@ -3,7 +3,7 @@ import { prismaClient } from "../prisma/client";
 import { ICreateUserDTO } from "../dtos/users/ICreateUserDTO";
 import { UserAlreadyExistsError } from "../errors/UserAlreadyExistsError";
 import { v4 as uuidV4 } from 'uuid';
-import { sendEmailToConfirmAccount } from "../emails/sendEmailToConfirmAccount";
+import { EmailSenderService } from "./EmailSenderService";
 
 class CreateUserService {
   static async execute(user: ICreateUserDTO) {
@@ -30,7 +30,8 @@ class CreateUserService {
       }
     });
 
-    sendEmailToConfirmAccount(userRegistered.email, confirmationCode)
+    const emailSenderService = new EmailSenderService();
+    emailSenderService.emailConfirmationAccount(userRegistered.email, confirmationCode)
 
     return userRegistered;
   }
