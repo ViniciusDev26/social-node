@@ -8,4 +8,6 @@ const authController = new AuthController();
 authRoutes.post('/', authController.authenticate);
 authRoutes.get('/confirm-account/:code', authController.verifyAccount);
 
+authRoutes.post('/resend-code', authController.resendVerificationCode);
+
 export { authRoutes };

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AuthUserService } from "../services/AuthUserService";
+import { ResendEmailVerificationService } from "../services/ResendEmailVerificationService";
 import { VerifyUserAccountService } from "../services/VerifyUserAccountService";
 
 class AuthController {
@@ -27,6 +28,20 @@ class AuthController {
 
       return res.json({
         message: 'Account verified'
+      });
+    }catch(err: any) {
+      return res.status(400).json({ error: err.message });
+    }
+  }
+
+  async resendVerificationCode(req: Request, res: Response) {
+    const { email } = req.body;
+
+    try {
+      await ResendEmailVerificationService.execute(email);
+
+      return res.json({
+        message: 'Verification code sent'
       });
     }catch(err: any) {
       return res.status(400).json({ error: err.message });
