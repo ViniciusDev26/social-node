@@ -1,7 +1,9 @@
 import { encryptPassword } from "../helpers/encryptPassword";
 import { prismaClient } from "../prisma/client";
 import { ICreateUserDTO } from "../dtos/users/ICreateUserDTO";
-import { UserAlreadyExistsError } from "../errors/userAlreadyExistsError";
+import { UserAlreadyExistsError } from "../errors/UserAlreadyExistsError";
+import { v4 as uuidV4 } from 'uuid';
+import { sendEmailToConfirmAccount } from "../emails/sendEmailToConfirmAccount";
 
 class CreateUserService {
   static async execute(user: ICreateUserDTO) {
@@ -12,19 +14,23 @@ class CreateUserService {
     }
 
     const hashPassword = await encryptPassword(user.password);
-
+    const confirmationCode = uuidV4();
     const userRegistered = await prismaClient.user.create({
       data: {
         ...user,
-        password: hashPassword
+        id: uuidV4(),
+        password: hashPassword,
+        confirmationCode,
       },
       select: {
         id: true,
         firstName: true,
         lastName: true,
-        email: true,
+        email: true
       }
     });
+
+    sendEmailToConfirmAccount(userRegistered.email, confirmationCode)
 
     return userRegistered;
   }
