@@ -17,5 +17,6 @@ model User {
   email          String   @unique @db.VarChar
   password       String   @db.VarChar
   emailConfirmed Boolean  @db.Boolean @default(false)
+  confirmationCode String  @db.VarChar @unique
   createdAt      DateTime @default(now())
 }
