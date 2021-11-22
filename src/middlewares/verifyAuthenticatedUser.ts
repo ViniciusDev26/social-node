@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { verify, JwtPayload } from "jsonwebtoken";
+import { verify } from "jsonwebtoken";
 
 function verifyAuthenticatedUser(req: Request, res: Response, next: NextFunction) {
   const token = req.headers.authorization?.split(" ")[1];
