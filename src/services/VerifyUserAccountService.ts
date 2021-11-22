@@ -1,5 +1,4 @@
 import { VerificationCodeError } from "../errors/VerificationCodeError";
-import { v4 as uuidV4 } from "uuid";
 import { prismaClient } from "../prisma/client";
 
 class VerifyUserAccountService {
@@ -20,7 +19,6 @@ class VerifyUserAccountService {
       },
       data: {
         emailConfirmed: true,
-        confirmationCode: uuidV4(),
       }
     })
 
