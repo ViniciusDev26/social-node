@@ -23,15 +23,11 @@ class AuthController {
     const { code } = req.params;
 
     try {
-      const user = await VerifyUserAccountService.execute(code);
+      await VerifyUserAccountService.execute(code);
 
-      if(!user){
-        return res.json({
-          message: 'Error to verification code'
-        });
-      }
-
-      return res.redirect('http://localhost:3333/');
+      return res.json({
+        message: 'Account verified'
+      });
     }catch(err: any) {
       return res.status(400).json({ error: err.message });
     }

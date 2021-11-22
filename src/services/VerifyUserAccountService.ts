@@ -1,3 +1,4 @@
+import { VerificationCodeError } from "../errors/VerificationCodeError";
 import { prismaClient } from "../prisma/client";
 
 class VerifyUserAccountService {
@@ -9,7 +10,7 @@ class VerifyUserAccountService {
     });
 
     if (!user) {
-      throw new Error("not possible to confirm, code is wrong");
+      throw new VerificationCodeError();
     }
 
     await prismaClient.user.update({
