@@ -1,6 +1,7 @@
 import { sign } from 'jsonwebtoken';
 
 import { IAuthUserDTO } from "../dtos/auth/IAuthUserDTO";
+import { EmailNotVerifiedError } from '../errors/EmailNotVerifiedError';
 import { WrongCredentialsError } from '../errors/WrongCredentialsError';
 import { checkPassword } from "../helpers/checkPassword";
 import { prismaClient } from "../prisma/client";
@@ -20,6 +21,10 @@ class AuthUserService {
 
     if (!passwordIsValid) {
       throw new WrongCredentialsError();
+    }
+
+    if(!user.emailConfirmed) {
+      throw new EmailNotVerifiedError(user.email);
     }
 
     return user;
