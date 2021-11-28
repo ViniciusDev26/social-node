@@ -1,9 +1,23 @@
 import { Request, Response } from "express";
+import { verify } from "jsonwebtoken";
 import { AuthUserService } from "../services/AuthUserService";
 import { ResendEmailVerificationService } from "../services/ResendEmailVerificationService";
 import { VerifyUserAccountService } from "../services/VerifyUserAccountService";
 
 class AuthController {
+  async getInfo(req: Request, res: Response) {
+    const auth = req.headers.authorization as string;
+    const token = auth.split('Bearer ')[1];
+
+    if(!token){
+      return res.status(401).json({ error: 'Token not provided' });
+    }
+
+    const payload = verify(token, process.env.privatekey as string);
+
+    return res.json(payload);
+  }
+
   async authenticate(req: Request, res: Response) {
     const { email, password } = req.body;
 

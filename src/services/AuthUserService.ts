@@ -41,7 +41,11 @@ class AuthUserService {
       lastName: user.lastName 
     }
     const secret = process.env.privatekey as string;
-    const token = sign(payload, secret, { expiresIn: '1d'})
+    
+    const token = sign(payload, secret, { 
+      subject: user.id,
+      expiresIn: '1d'
+    })
     
     return {
       token: `Bearer ${token}`,
