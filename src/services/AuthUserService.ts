@@ -45,6 +45,11 @@ class AuthUserService {
     
     return {
       token: `Bearer ${token}`,
+      user: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      }
     };
   }
   
